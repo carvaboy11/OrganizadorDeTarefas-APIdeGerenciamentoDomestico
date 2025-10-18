@@ -122,4 +122,110 @@ app.MapGet("/listar/tarefas", async ([FromServices] Context context) =>
     return tarefas.Count == 0 ? Results.NotFound() : Results.Ok(tarefas);
 });
 
+//Listar Moradores com tarefas feitas
+app.MapGet("/listar/moradores", async ([FromServices] Context context) =>
+{
+    var moradores = await context.Moradores
+        .Include(m => m.TarefasConcluidas)
+        .ToListAsync();
+
+    if (moradores.Count == 0)
+    {
+        return Results.NotFound("Nenhum morador encontrado!");
+    }
+
+    var resultado = moradores.Select(m => new MoradorComTarefaDTO
+    {
+        Id = m.Id,
+        Nome = m.Nome,
+        TarefasConcluidas = m.TarefasConcluidas.Select(tc => new TarefaConcluidaSimplesDTO
+        {
+            NomeTarefa = tc.Nome,
+            DataConclusao = tc.DataConclusao
+        }).ToList()
+    }).ToList();
+
+    return Results.Ok(resultado);
+});
+
+//Listar tarefas concluidas com nome do morador
+app.MapGet("/listar/tarefas-concluidas", async ([FromServices] Context context) =>
+{
+    var tarefasConcluidas = await context.TarefasConcluidas
+        .Include(tc => tc.morador)
+        .ToListAsync();
+
+    if (tarefasConcluidas.Count == 0)
+    {
+        return Results.NotFound("Nenhuma tarefa concluída encontrada!!");
+    }
+
+    var resultado = tarefasConcluidas.Select(tc => new TarefaConcluidaComMoradorComodoDTO
+    {
+        NomeMorador = tc.morador.Nome,
+        NomeComodo = tc.Nome, 
+        DataConclusao = tc.DataConclusao
+    }).ToList();
+
+    return Results.Ok(resultado);
+});
+
+//Concluir tarefa
+app.MapPost("/tarefa/concluir/{idTarefa}/{idMorador}", async ([FromRoute] int idTarefa, [FromRoute] int idMorador, [FromServices] Context context) =>
+{
+    var tarefa = await context.Tarefas
+        .Include(t => t.Comodo)
+        .FirstOrDefaultAsync(t => t.Id == idTarefa);
+
+    if (tarefa == null)
+        return Results.NotFound("Tarefa não encontrada!!");
+
+    var morador = await context.Moradores.FindAsync(idMorador);
+    if (morador == null)
+        return Results.NotFound("Morador não encontrado.");
+
+    var tarefaConcluida = new TarefaConcluida
+    {
+        Nome = tarefa.Nome,
+        Descricao = tarefa.Descricao,
+        DataConclusao = DateTime.Now,
+        MoradorId = morador.Id,
+        morador = morador
+    };
+
+    await context.TarefasConcluidas.AddAsync(tarefaConcluida);
+
+    context.Tarefas.Remove(tarefa);
+
+    await context.SaveChangesAsync();
+
+    return Results.Ok($"Tarefa '{tarefa.Nome}' concluída por {morador.Nome} e movida para TarefasConcluidas.");
+});
+
+//Deletar tarefa com id
+app.MapDelete("/deletar/tarefa/{id}", async ([FromRoute] int id, [FromServices] Context context) =>
+{
+    var tarefa = await context.Tarefas.FindAsync(id);
+    if (tarefa == null)
+    {
+        return Results.NotFound("Tarefa nao encontrada!!");
+    }
+    context.Tarefas.Remove(tarefa);
+    await context.SaveChangesAsync();
+    return Results.NoContent();
+});
+
+//Deletar comodo com id
+app.MapDelete("/deletar/comodo/{id}", async ([FromRoute] int id, [FromServices] Context context) =>
+{
+    var comodo = await context.Comodos.FindAsync(id);
+    if (comodo == null)
+    {
+        return Results.NotFound("Comodo nao encontrado!!");
+    }
+    context.Comodos.Remove(comodo);
+    await context.SaveChangesAsync();
+    return Results.NoContent();
+});
+
 app.Run();
