@@ -227,5 +227,65 @@ app.MapDelete("/deletar/comodo/{id}", async ([FromRoute] int id, [FromServices] 
     await context.SaveChangesAsync();
     return Results.NoContent();
 });
+//Deletar morador com cpf e nome
+app.MapDelete("/deletar/morador/{cpf}/{nome}", async ([FromRoute] string cpf, [FromRoute] string nome, [FromServices] Context context) =>
+{
+    var morador = await context.Moradores.FirstOrDefaultAsync(m => m.Cpf == cpf && m.Nome == nome);
+    if (morador == null)
+    {
+        return Results.NotFound("Morador nao encontrado!!");
+    }
+    context.Moradores.Remove(morador);
+    await context.SaveChangesAsync();
+    return Results.NoContent();
+});
 
+//Procurar morador com cpf e nome
+app.MapGet("/procurar/morador/{cpf}/{nome}", async ([FromRoute] string cpf, [FromRoute] string nome, [FromServices] Context context) =>
+{
+    var morador = await context.Moradores.FirstOrDefaultAsync(m => m.Cpf == cpf && m.Nome == nome);
+    return morador == null ? Results.NotFound("Nenhum morador encontrado!!") : Results.Ok(morador);
+});
+
+//Alterar morador pelo Cpf e Nome
+app.MapPut("/alterar/morador/{cpf}/{nome}", async ([FromRoute] string cpf, [FromRoute] string nome, [FromBody] Morador morador, [FromServices] Context context) =>
+{
+    var moradorEncontrado = await context.Moradores.FirstOrDefaultAsync(m => m.Cpf == cpf && m.Nome == nome);
+    if (moradorEncontrado == null)
+    {
+        return Results.NotFound("Morador nao encontrado!!");
+    }
+    moradorEncontrado.Nome = morador.Nome;
+    moradorEncontrado.Cpf = morador.Cpf;
+    await context.SaveChangesAsync();
+    return Results.Ok(moradorEncontrado);
+});
+
+//Alterar comodo pelo id
+app.MapPut("/alterar/comodo/{id}", async ([FromRoute] int id, [FromBody] Comodo comodo, [FromServices] Context context) =>
+{
+    var comodoEncontrado = await context.Comodos.FirstOrDefaultAsync(c => c.Id == id);
+    if (comodoEncontrado == null)
+    {
+        return Results.NotFound("Comodo nao encontrado!!");
+    }
+    comodoEncontrado.Nome = comodo.Nome;
+    comodoEncontrado.Descricao = comodo.Descricao;
+    await context.SaveChangesAsync();
+    return Results.Ok(comodoEncontrado);
+});
+
+//Alterar tarefa pelo id
+app.MapPut("/alterar/tarefa/{id}", async ([FromRoute] int id, [FromBody] Tarefa tarefa, [FromServices] Context context) =>
+{
+    var tarefaEncontrada = await context.Tarefas.FirstOrDefaultAsync(t => t.Id == id);    
+    if (tarefaEncontrada == null)
+    {
+        return Results.NotFound("Tarefa nao encontrada!!");
+    }
+    tarefaEncontrada.Nome = tarefa.Nome;
+    tarefaEncontrada.Descricao = tarefa.Descricao;
+    await context.SaveChangesAsync();
+    return Results.Ok(tarefaEncontrada);
+});
 app.Run();
