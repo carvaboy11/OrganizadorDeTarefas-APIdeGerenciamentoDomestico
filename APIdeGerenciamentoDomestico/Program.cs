@@ -157,7 +157,7 @@ app.MapGet("/listar/tarefas-concluidas", async ([FromServices] Context context) 
     var resultado = tarefasConcluidas.Select(tc => new TarefaConcluidaComMoradorComodoDTO
     {
         NomeMorador = tc.morador.Nome,
-        NomeComodo = tc.Comodo?.Nome, 
+        NomeComodo = tc.Nome, 
         DataConclusao = tc.DataConclusao
     }).ToList();
 
