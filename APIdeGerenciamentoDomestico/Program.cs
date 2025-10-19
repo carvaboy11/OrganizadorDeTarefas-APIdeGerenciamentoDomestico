@@ -61,13 +61,6 @@ app.MapPost("/cadastrar/tarefa", async ([FromBody] Tarefa tarefa, [FromServices]
         return Results.BadRequest($"ComodoId {tarefa.ComodoId} nao existe");
     }
 
-    context.Tarefas.Add(new Tarefa
-    {
-        Nome = tarefa.Nome,
-        Descricao = tarefa.Descricao,
-        ComodoId = tarefa.ComodoId
-    });
-
     context.Tarefas.Add(tarefa);
     await context.SaveChangesAsync();
     return Results.Created($"/cadastrar/tarefa/{tarefa.Nome}", tarefa);
@@ -94,7 +87,7 @@ app.MapGet("/listar/comodos", async ([FromServices] Context context) =>
 
     if (comodos.Count == 0)
     {
-        return Results.NotFound();
+        return Results.NotFound("Nenhum comodo cadastrado!!");
     }
 
     return Results.Ok(comodos);
@@ -119,8 +112,9 @@ app.MapGet("/listar/tarefas", async ([FromServices] Context context) =>
     {
         return Results.NotFound("Tarefas nao encontradas!!");
     }
-    return tarefas.Count == 0 ? Results.NotFound() : Results.Ok(tarefas);
+    return tarefas.Count == 0 ? Results.NotFound("Nenhuma tarefa encontrada!!") : Results.Ok(tarefas);
 });
+
 
 //Listar Moradores com tarefas feitas
 app.MapGet("/listar/moradores", async ([FromServices] Context context) =>
@@ -163,7 +157,7 @@ app.MapGet("/listar/tarefas-concluidas", async ([FromServices] Context context) 
     var resultado = tarefasConcluidas.Select(tc => new TarefaConcluidaComMoradorComodoDTO
     {
         NomeMorador = tc.morador.Nome,
-        NomeComodo = tc.Nome, 
+        NomeComodo = tc.Comodo?.Nome, 
         DataConclusao = tc.DataConclusao
     }).ToList();
 
@@ -212,7 +206,8 @@ app.MapDelete("/deletar/tarefa/{id}", async ([FromRoute] int id, [FromServices] 
     }
     context.Tarefas.Remove(tarefa);
     await context.SaveChangesAsync();
-    return Results.NoContent();
+    return Results.Ok("Tarefa deletada!!");
+
 });
 
 //Deletar comodo com id
@@ -225,7 +220,8 @@ app.MapDelete("/deletar/comodo/{id}", async ([FromRoute] int id, [FromServices] 
     }
     context.Comodos.Remove(comodo);
     await context.SaveChangesAsync();
-    return Results.NoContent();
+
+    return Results.Ok("Comodo deletado!!");
 });
 //Deletar morador com cpf e nome
 app.MapDelete("/deletar/morador/{cpf}/{nome}", async ([FromRoute] string cpf, [FromRoute] string nome, [FromServices] Context context) =>
@@ -237,7 +233,8 @@ app.MapDelete("/deletar/morador/{cpf}/{nome}", async ([FromRoute] string cpf, [F
     }
     context.Moradores.Remove(morador);
     await context.SaveChangesAsync();
-    return Results.NoContent();
+
+    return Results.Ok("Morador deletado!!");
 });
 
 //Procurar morador com cpf e nome
@@ -278,7 +275,8 @@ app.MapPut("/alterar/comodo/{id}", async ([FromRoute] int id, [FromBody] Comodo 
 //Alterar tarefa pelo id
 app.MapPut("/alterar/tarefa/{id}", async ([FromRoute] int id, [FromBody] Tarefa tarefa, [FromServices] Context context) =>
 {
-    var tarefaEncontrada = await context.Tarefas.FirstOrDefaultAsync(t => t.Id == id);    
+    var tarefaEncontrada = await context.Tarefas.FirstOrDefaultAsync(t => t.Id == id);
+   
     if (tarefaEncontrada == null)
     {
         return Results.NotFound("Tarefa nao encontrada!!");
@@ -288,4 +286,5 @@ app.MapPut("/alterar/tarefa/{id}", async ([FromRoute] int id, [FromBody] Tarefa 
     await context.SaveChangesAsync();
     return Results.Ok(tarefaEncontrada);
 });
+
 app.Run();
