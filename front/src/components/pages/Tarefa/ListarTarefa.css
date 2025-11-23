@@ -1,0 +1,52 @@
+.tarefa-container {
+    width: 90%;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ccc;
+    text-align: center;
+    color: black;
+}
+
+th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+.concluir-area {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    align-items: center;
+}
+
+select {
+    padding: 5px;
+}
+
+button {
+    padding: 6px 12px;
+    background-color: #3d8bfd;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button:hover {
+    background-color: #1b6be0;
+}
