@@ -14,6 +14,14 @@ builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =
     options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
 
+builder.Services.AddCors(options =>
+    options.AddPolicy("Acesso Total",
+        configs => configs
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod())
+);
+
 var app = builder.Build();
 
 app.MapGet("/", () => "API de Organização da Casa!!");
@@ -132,6 +140,7 @@ app.MapGet("/listar/moradores", async ([FromServices] Context context) =>
     {
         Id = m.Id,
         Nome = m.Nome,
+        Cpf = m.Cpf, 
         TarefasConcluidas = m.TarefasConcluidas.Select(tc => new TarefaConcluidaSimplesDTO
         {
             NomeTarefa = tc.Nome,
@@ -142,27 +151,30 @@ app.MapGet("/listar/moradores", async ([FromServices] Context context) =>
     return Results.Ok(resultado);
 });
 
-//Listar tarefas concluidas com nome do morador
+
+//Listar tarefas concluidas com nome do morador e comodo
 app.MapGet("/listar/tarefas-concluidas", async ([FromServices] Context context) =>
 {
     var tarefasConcluidas = await context.TarefasConcluidas
-        .Include(tc => tc.morador)
+        .Include(tc => tc.Morador)
+        .Include(tc => tc.Comodo)
         .ToListAsync();
 
     if (tarefasConcluidas.Count == 0)
-    {
         return Results.NotFound("Nenhuma tarefa concluída encontrada!!");
-    }
 
     var resultado = tarefasConcluidas.Select(tc => new TarefaConcluidaComMoradorComodoDTO
     {
-        NomeMorador = tc.morador.Nome,
-        NomeComodo = tc.Nome, 
+        NomeMorador = tc.Morador.Nome,
+        NomeComodo = tc.Comodo?.Nome ?? "", // opcional
+        NomeTarefa = tc.Nome,
         DataConclusao = tc.DataConclusao
     }).ToList();
 
     return Results.Ok(resultado);
 });
+
+
 
 //Concluir tarefa
 app.MapPost("/tarefa/concluir/{idTarefa}/{idMorador}", async ([FromRoute] int idTarefa, [FromRoute] int idMorador, [FromServices] Context context) =>
@@ -181,10 +193,11 @@ app.MapPost("/tarefa/concluir/{idTarefa}/{idMorador}", async ([FromRoute] int id
     var tarefaConcluida = new TarefaConcluida
     {
         Nome = tarefa.Nome,
-        Descricao = tarefa.Descricao,
         DataConclusao = DateTime.Now,
         MoradorId = morador.Id,
-        morador = morador
+        Morador = morador,
+        ComodoId = tarefa.ComodoId,
+        Comodo = tarefa.Comodo
     };
 
     await context.TarefasConcluidas.AddAsync(tarefaConcluida);
@@ -286,5 +299,7 @@ app.MapPut("/alterar/tarefa/{id}", async ([FromRoute] int id, [FromBody] Tarefa 
     await context.SaveChangesAsync();
     return Results.Ok(tarefaEncontrada);
 });
+
+app.UseCors("Acesso Total");
 
 app.Run();
