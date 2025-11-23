@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APIdeGerenciamentoDomestico.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20251019165932_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20251123232116_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -94,10 +94,6 @@ namespace APIdeGerenciamentoDomestico.Migrations
                     b.Property<DateTime>("DataConclusao")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("MoradorId")
                         .HasColumnType("INTEGER");
 
@@ -127,17 +123,19 @@ namespace APIdeGerenciamentoDomestico.Migrations
 
             modelBuilder.Entity("APIdeGerenciamentoDeTarefas.Models.TarefaConcluida", b =>
                 {
-                    b.HasOne("APIdeGerenciamentoDeTarefas.Models.Comodo", null)
+                    b.HasOne("APIdeGerenciamentoDeTarefas.Models.Comodo", "Comodo")
                         .WithMany("TarefasConcluidas")
                         .HasForeignKey("ComodoId");
 
-                    b.HasOne("APIdeGerenciamentoDeTarefas.Models.Morador", "morador")
+                    b.HasOne("APIdeGerenciamentoDeTarefas.Models.Morador", "Morador")
                         .WithMany("TarefasConcluidas")
                         .HasForeignKey("MoradorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("morador");
+                    b.Navigation("Comodo");
+
+                    b.Navigation("Morador");
                 });
 
             modelBuilder.Entity("APIdeGerenciamentoDeTarefas.Models.Comodo", b =>

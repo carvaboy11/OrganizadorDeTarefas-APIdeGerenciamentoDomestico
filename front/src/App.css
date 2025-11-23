@@ -1,38 +1,147 @@
-.App {
+/* ===== RESET BÁSICO ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ===== CONTAINER PRINCIPAL ===== */
+#app {
+  min-height: 100vh;
+  background-color: #f1f5f9;
+}
+
+/* ===== CABEÇALHO ===== */
+.app-header {
+  background-color: #1e40af;     /* azul escuro elegante */
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
+}
+
+.header-title {
+  color: white;
+  font-size: 28px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.header-title:hover {
+  color: #dbeafe;
+  text-shadow: 0px 0px 6px rgba(255,255,255,0.65);
+}
+
+/* ===== ESTILIZAÇÃO PADRÃO DAS PÁGINAS DE CADASTRO ===== */
+.cadastro-container {
+  background: white;
+  width: 460px;
+  margin: 40px auto;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.cadastro-container h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #1e3a8a;
+}
+
+.cadastro-container form div {
+  margin-bottom: 15px;
+}
+
+.cadastro-container label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.cadastro-container input,
+.cadastro-container select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.cadastro-container input:focus,
+.cadastro-container select:focus {
+  border-color: #1e40af;
+  box-shadow: 0px 0px 4px #1e3a8a55;
+}
+
+.cadastro-container button {
+  width: 100%;
+  padding: 12px;
+  background-color: #1e40af;
+  border: none;
+  color: white;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.cadastro-container button:hover {
+  background-color: #1e3a8a;
+}
+
+/* ===== HOME ===== */
+.home-container {
+  padding: 40px;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.home-subtitle {
+  font-size: 18px;
+  margin-bottom: 30px;
+  color: #444;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Cards container */
+.home-card-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+/* Each card */
+.home-card {
+  width: 280px;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  transition: 0.2s;
+}
+
+.home-card:hover {
+  transform: translateY(-5px);
+}
+
+.home-card h2 {
+  color: #1e3a8a;
+  margin-bottom: 10px;
+}
+
+.home-btn {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 16px;
+  background-color: #1e40af;
   color: white;
+  font-weight: bold;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: 0.2s;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.home-btn:hover {
+  background-color: #1d4ed8;
 }

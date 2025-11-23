@@ -14,7 +14,6 @@ function ListarMoradores() {
     buscarMoradoresAPI();
   }, []);
 
-  // Buscar moradores do backend
   async function buscarMoradoresAPI() {
     try {
       const resposta = await axios.get("http://localhost:5047/listar/moradores");
@@ -24,7 +23,6 @@ function ListarMoradores() {
     }
   }
 
-  // Deletar morador usando CPF e Nome
   async function deletarMorador(id: number) {
     const morador = moradores.find((m) => m.id === id);
     if (!morador) return;
@@ -42,21 +40,18 @@ function ListarMoradores() {
     }
   }
 
-  // Iniciar edição de nome e CPF
   function iniciarEdicao(morador: Morador) {
     setEditandoId(morador.id || null);
     setNovoNome(morador.nome);
-    setNovoCpf(morador.cpf); // Preenche o input de CPF
-  }
+    setNovoCpf(morador.cpf);
 
-  // Cancelar edição
+  }
   function cancelarEdicao() {
     setEditandoId(null);
     setNovoNome("");
     setNovoCpf("");
   }
 
-  // Salvar edição usando CPF e Nome
   async function salvarEdicao(id: number) {
     const morador = moradores.find((m) => m.id === id);
     if (!morador) return;
@@ -78,7 +73,6 @@ function ListarMoradores() {
     }
   }
 
-  // Expandir/ocultar tarefas
   function toggleExpandir(id: number) {
     setExpandidoId(expandidoId === id ? null : id);
   }

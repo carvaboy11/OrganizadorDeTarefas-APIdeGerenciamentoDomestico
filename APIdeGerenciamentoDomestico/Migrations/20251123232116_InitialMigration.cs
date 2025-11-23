@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace APIdeGerenciamentoDomestico.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -67,7 +67,6 @@ namespace APIdeGerenciamentoDomestico.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Nome = table.Column<string>(type: "TEXT", nullable: false),
-                    Descricao = table.Column<string>(type: "TEXT", nullable: false),
                     DataConclusao = table.Column<DateTime>(type: "TEXT", nullable: false),
                     MoradorId = table.Column<int>(type: "INTEGER", nullable: false),
                     ComodoId = table.Column<int>(type: "INTEGER", nullable: true)

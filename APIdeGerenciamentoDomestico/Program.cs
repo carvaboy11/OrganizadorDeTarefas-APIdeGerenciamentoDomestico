@@ -140,7 +140,7 @@ app.MapGet("/listar/moradores", async ([FromServices] Context context) =>
     {
         Id = m.Id,
         Nome = m.Nome,
-        Cpf = m.Cpf, 
+        Cpf = m.Cpf, // ✅ Agora incluímos o CPF
         TarefasConcluidas = m.TarefasConcluidas.Select(tc => new TarefaConcluidaSimplesDTO
         {
             NomeTarefa = tc.Nome,
