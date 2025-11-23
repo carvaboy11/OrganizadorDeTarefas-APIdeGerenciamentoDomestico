@@ -10,5 +10,6 @@ public class Comodo
 
     public ICollection<Tarefa> Tarefas { get; set; } = new List<Tarefa>();
     public ICollection<TarefaConcluida> TarefasConcluidas { get; set; } = new List<TarefaConcluida>();
+    
         
 }

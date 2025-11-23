@@ -6,6 +6,7 @@ public class MoradorComTarefaDTO
 {
     public int Id { get; set; }
     public string Nome { get; set; } = string.Empty;
+    public string Cpf { get; set; } = string.Empty;
     public List<TarefaConcluidaSimplesDTO> TarefasConcluidas { get; set; } = new();
 }
 
