@@ -59,7 +59,6 @@ function ListarTarefas() {
     }
   }
 
-  // Nova função para deletar tarefa
   async function deletarTarefa(idTarefa: number) {
     try {
       await axios.delete(`http://localhost:5047/deletar/tarefa/${idTarefa}`);

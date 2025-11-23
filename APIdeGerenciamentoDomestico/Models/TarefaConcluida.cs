@@ -8,7 +8,7 @@ public class TarefaConcluida
     public string Nome { get; set; } = string.Empty;
     public DateTime DataConclusao { get; set; }
     public int MoradorId { get; set; }
-    public Morador Morador { get; set; } = null!;
+    public Morador Morador { get; set; }
     public int? ComodoId { get; set; }
     public Comodo? Comodo { get; set; }
 }
